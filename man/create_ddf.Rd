@@ -11,8 +11,13 @@ create_ddf(
   entity_id,
   entity_name,
   datacolumns,
+  tag_id,
+  tag_name,
+  name_short = NULL,
+  name_catalog = NULL,
   description = NULL,
   source = NULL,
+  parent = NULL,
   output_folder = getwd()
 )
 }
@@ -29,9 +34,19 @@ create_ddf(
 
 \item{datacolumns}{A range of numeric variables. The columns including data. Should be referenced in the format "1-3" or "1,2,3"}
 
+\item{tag_id}{A character variable. The ID connected to each variable. Should only include lower case letters and underscores.}
+
+\item{tag_name}{A character variable. The Name of each variable.}
+
+\item{name_short}{(Optional) A character variable. A shortened version of the variable name.}
+
+\item{name_catalog}{(Optional) A character variable. The variable name to be shown in the catalog / tree menu.}
+
 \item{description}{(Optional) A character variable. The definition of each variable. Should not include commas or semi-colons.}
 
 \item{source}{(Optional) A character variable. The source of each variable. Preferably the URL of the source.}
+
+\item{parent}{(Optional) A character variable. The definition of each variable. Should not include commas or semi-colons.}
 
 \item{output_folder}{(Optional) Where the file should be saved. By default set to the working directory.}
 }

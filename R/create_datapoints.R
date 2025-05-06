@@ -19,12 +19,6 @@
 
   # Create a datapoint-file for each variable
 create_datapoints <- function(dataset, entity_id, variable_id, datacolumns, output_folder = getwd()) {
-  # dataset = the dataset to be converted
-  # entity_id = what variable to be used as the entity id
-  #variable_id = what variable to be used as the variable id
-  #datacolumns = a range of columns that include that data, in the format "5-10"
-  #output_folder = a reference link to the folder where the files should be created
-
 
   # Required packages
   library(dplyr)
@@ -39,12 +33,24 @@ create_datapoints <- function(dataset, entity_id, variable_id, datacolumns, outp
     stop("One or more column names do not exist in the dataset.")
   }
 
+  # check for duplicate Entity IDs per variable
+
+  duplicates <- dataset %>%
+    count(.[[entity_id]], .[[variable_id]]) %>%
+    filter(n > 1)
+
+  if (nrow(duplicates) > 0) {
+    stop("Duplicate Entity ID(s) are associated with the same variable(s). Resolve before running the function again.")
+  }
+
+
+
   if (grepl("-", datacolumns)) {
     # if datacolumns is a range ("6-20")
     column_range <- as.integer(strsplit(datacolumns, "-")[[1]])
     datacolumns <- column_range[1]:column_range[2]  # Convert to a sequence of numbers
   } else {
-    # if datacolumns is just a list of column numbers
+    # if datacolumns is just a list of column numbers seperated by ','
     datacolumns <- as.integer(strsplit(datacolumns, ",")[[1]])
   }
 

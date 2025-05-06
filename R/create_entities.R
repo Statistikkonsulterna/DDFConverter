@@ -9,7 +9,7 @@
 #' @examples
 #' \dontrun{
 #' create_entities(dataset = dataset, entity_id = "reg_id", entity_name = "Region",
-#' output_folder = "C:/Users/current.user/Documents")
+#' output_folder = "path/to/folder")
 #' }
 #' @import dplyr
 #' @import tidyr
@@ -41,6 +41,13 @@ create_entities <- function(dataset, entity_id, entity_name, output_folder = get
   entity <- cbind(entity, rep(TRUE))
   colnames(entity) <- c(entity_id, "name", paste0("is--", entity_id))
 
+  entity <- entity[, c(entity_id, paste0("is--", entity_id), "name")]
+
+  #Error if an ID is duplicated
+  if (any(duplicated(entity[[entity_id]]))) {
+    stop("The Entity ID contains duplicates. Resolve before running the function again.")
+  }
+
 
   # create a filename for the CSV
   output_filename <- paste0("ddf--entities--geo--", entity_id, ".csv")
@@ -49,5 +56,5 @@ create_entities <- function(dataset, entity_id, entity_name, output_folder = get
   output_filepath <- file.path(output_folder, output_filename)
 
   # save as a CSV file
-  write.csv(entity, file = output_filepath, row.names = FALSE, quote = FALSE, fileEncoding = "UTF-8")
+  write.csv(entity, file = output_filepath, row.names = FALSE, quote = FALSE, fileEncoding = "UTF-8", na="")
 }

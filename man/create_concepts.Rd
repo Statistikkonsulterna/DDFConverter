@@ -11,7 +11,11 @@ create_concepts(
   entity_id,
   description = NULL,
   source = NULL,
-  output_folder = getwd()
+  name_short = NULL,
+  name_catalog = NULL,
+  tag_id = NULL,
+  output_folder = getwd(),
+  return_output = FALSE
 )
 }
 \arguments{
@@ -27,7 +31,15 @@ create_concepts(
 
 \item{source}{(Optional) A character variable. The source of each variable. Preferably the URL of the source.}
 
+\item{name_short}{(Optional) A character variable. A shortened version of the variable name.}
+
+\item{name_catalog}{(Optional) A character variable. The variable name to be shown in the catalog / tree menu.}
+
+\item{tag_id}{(Optional) A character variable. The ID specifying which folder the variable belongs in. Should only include lower case letters and underscores.}
+
 \item{output_folder}{(Optional) Where the file should be saved. By default set to the working directory.}
+
+\item{return_output}{Returns the output. Default = FALSE}
 }
 \value{
 Saves a CSV-file in the given output-folder named "ddf--concepts". This file includes one row for each named variable which always includes geo, year, name, domain, entity_id, all data-variables and the given, relevant variables.

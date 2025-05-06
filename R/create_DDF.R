@@ -9,6 +9,11 @@
 #' @param datacolumns A range of numeric variables. The columns including data. Should be referenced in the format "1-3" or "1,2,3"
 #' @param description (Optional) A character variable. The definition of each variable. Should not include commas or semi-colons.
 #' @param source (Optional) A character variable. The source of each variable. Preferably the URL of the source.
+#' @param name_short (Optional) A character variable. A shortened version of the variable name.
+#' @param name_catalog (Optional) A character variable. The variable name to be shown in the catalog / tree menu.
+#' @param tag_id A character variable. The ID connected to each variable. Should only include lower case letters and underscores.
+#' @param tag_name A character variable. The Name of each variable.
+#' @param parent (Optional) A character variable. The definition of each variable. Should not include commas or semi-colons.
 #' @param output_folder (Optional) Where the file should be saved. By default set to the working directory.
 #' @returns Saves a folder in the given output-folder named "ddf_filesystem_current_date". This folder includes a concepts-files, entities-file and a folder containing all datapoints.
 #' @examples
@@ -22,7 +27,10 @@
 #' @import utils
 #' @export
 
-create_ddf <- function(dataset, variable_id, variable_name, entity_id, entity_name, datacolumns, description = NULL, source = NULL, output_folder = getwd()) {
+create_ddf <- function(dataset, variable_id, variable_name, entity_id, entity_name,
+                       datacolumns, tag_id, tag_name, name_short = NULL,
+                       name_catalog = NULL, description = NULL, source = NULL,
+                       parent = NULL, output_folder = getwd()) {
 
   # Required packages
   library(dplyr)
@@ -34,9 +42,64 @@ create_ddf <- function(dataset, variable_id, variable_name, entity_id, entity_na
   }
 
 
+  ##############################################################################
+
+
+  ################################Tags##########################################
+
+
+  if (is.null(parent)) {
+    columns_to_select <- c(tag_id, tag_name)
+    tag_data <- dataset %>%
+      select(all_of(columns_to_select)) %>%
+      distinct() %>%
+      mutate(parent = NA)  # Add an empty 'parent' column
+  } else {
+    columns_to_select <- c(tag_id, tag_name, parent)
+    tag_data <- dataset %>%
+      select(all_of(columns_to_select)) %>%
+      distinct()
+  }
+
+  #Error if an ID is duplicated
+  if (any(duplicated(tag_data[[tag_id]]))) {
+    stop("The Tag ID contains duplicates. Resolve before running the function again")
+  }
+
+  tag_data <- tag_data %>%
+    rename("tag" = .data[[tag_id]],
+           "name" = .data[[tag_name]])
+
+  if (!is.null(parent)) {
+    tag_data <- tag_data %>%
+      rename("parent" = .data[[parent]])
+  }
+
+  folder_name <- paste0("ddf_filessystem_", Sys.Date())
+
+  # Create the new subfolder path
+  new_folder <- file.path(output_folder, folder_name)
+
+  # Create the directory if it doesn't exist
+  if (!dir.exists(new_folder)) {
+    dir.create(new_folder, recursive = TRUE)
+  }
+
+  # create a filename for the CSV
+  output_filename <- "ddf--entities--tag.csv"
+
+  # combine folder path and filename
+  output_filepath <- file.path(new_folder, output_filename)
+
+  # save as a CSV file
+  write.csv(tag_data, file = output_filepath, row.names = FALSE, quote = FALSE, fileEncoding = "UTF-8", na="")
+
+
+  ##############################################################################
+
   ######################### Code from concepts #################################
   required_columns <- c(variable_id, variable_name, entity_id)
-  optional_columns <- c(description, source)
+  optional_columns <- c(description, source, name_short, name_catalog, tag_id)
 
   if (!all(c(required_columns) %in% colnames(dataset))) {
     stop("One or more column names do not exist in the dataset.")
@@ -63,20 +126,38 @@ create_ddf <- function(dataset, variable_id, variable_name, entity_id, entity_na
     ) %>%
     select(concept, concept_type, name, domain, all_of(existing_optional))
 
+  #Error if an ID is duplicated
+  if (any(duplicated(concept_data$concept))) {
+    stop("The Variable ID contains duplicates.")
+  }
+
+
+  #Error if a Name is duplicated
+  if (any(duplicated(concept_data$name))) {
+    stop("The Variable Names contains duplicates.")
+  }
+
   # static concepts
-  concept_list <- tibble::tibble(
-    concept = c("geo", "year", "name", "domain", entity_id),
-    concept_type = c("entity_domain", "time", "string", "string", "entity_set"),
-    name = c("Geographic location", "Year", "Name", "Domain", "Entity name"),
-    domain = c("", "", "", "", "geo")
-  )
+  if (tag_id %in% colnames(dataset)){
+    concept_list <- tibble::tibble(
+      concept = c("geo", "year", "name", "domain", entity_id, "tags", "parent"),
+      concept_type = c("entity_domain", "time", "string", "string", "entity_set", "string", "string"),
+      name = c("Geographic location", "Year", "Name", "Domain", "Entity name", "Tags", "Parent"),
+      domain = c("", "", "", "", "geo", "", "")
+    )} else {
+      concept_list <- tibble::tibble(
+        concept = c("geo", "year", "name", "domain", entity_id),
+        concept_type = c("entity_domain", "time", "string", "string", "entity_set"),
+        name = c("Geographic location", "Year", "Name", "Domain", "Entity name"),
+        domain = c("", "", "", "", "geo")
+      )}
 
 
   if (!is.null(description) && description %in% colnames(dataset)) {
     concept_list <- bind_rows(
       concept_list,
       tibble::tibble(
-        concept = description,
+        concept = "description",
         concept_type = "string",
         name = "Description",
         domain = ""
@@ -88,9 +169,46 @@ create_ddf <- function(dataset, variable_id, variable_name, entity_id, entity_na
     concept_list <- bind_rows(
       concept_list,
       tibble::tibble(
-        concept = source,
+        concept = "source_URL",
         concept_type = "string",
         name = "Source",
+        domain = ""
+      )
+    )
+  }
+
+
+  if (!is.null(name_short) && name_short %in% colnames(dataset)) {
+    concept_list <- bind_rows(
+      concept_list,
+      tibble::tibble(
+        concept = "name_short",
+        concept_type = "string",
+        name = "Short Name",
+        domain = ""
+      )
+    )
+  }
+
+  if (!is.null(name_catalog) && name_catalog %in% colnames(dataset)) {
+    concept_list <- bind_rows(
+      concept_list,
+      tibble::tibble(
+        concept = "name_catalog",
+        concept_type = "string",
+        name = "Catalog Name",
+        domain = ""
+      )
+    )
+  }
+
+  if (!is.null(tag_id) && tag_id %in% colnames(dataset)) {
+    concept_list <- bind_rows(
+      concept_list,
+      tibble::tibble(
+        concept = "tag",
+        concept_type = "entity_domain",
+        name = "Tag",
         domain = ""
       )
     )
@@ -103,16 +221,32 @@ create_ddf <- function(dataset, variable_id, variable_name, entity_id, entity_na
 
   ddf_concepts <- rbind(concept_data, concept_list)
 
-
-  folder_name <- paste0("ddf_filessystem_", Sys.Date())
-
-  # Create the new subfolder path
-  new_folder <- file.path(output_folder, folder_name)
-
-  # Create the directory if it doesn't exist
-  if (!dir.exists(new_folder)) {
-    dir.create(new_folder, recursive = TRUE)
+  # rename optional variables
+  if (!is.null(description) && description %in% colnames(ddf_concepts)) {
+    ddf_concepts <- ddf_concepts %>%
+      rename("description" = .data[[description]])
   }
+
+  if (!is.null(source) && source %in% colnames(ddf_concepts)) {
+    ddf_concepts <- ddf_concepts %>%
+      rename("source_URL" = .data[[source]])
+  }
+
+  if (!is.null(name_short) && name_short %in% colnames(ddf_concepts)) {
+    ddf_concepts <- ddf_concepts %>%
+      rename("name_short" = .data[[name_short]])
+  }
+
+  if (!is.null(name_catalog) && name_catalog %in% colnames(ddf_concepts)) {
+    ddf_concepts <- ddf_concepts %>%
+      rename("name_catalog" = .data[[name_catalog]])
+  }
+
+  if (!is.null(tag_id) && tag_id %in% colnames(ddf_concepts)) {
+    ddf_concepts <- ddf_concepts %>%
+      rename("tags" = .data[[tag_id]])
+  }
+
 
   # create a filename for the CSV
   output_filename <- "ddf--concepts.csv"
@@ -136,6 +270,12 @@ create_ddf <- function(dataset, variable_id, variable_name, entity_id, entity_na
   entity <- cbind(entity, rep(TRUE))
   colnames(entity) <- c(entity_id, "name", paste0("is--", entity_id))
 
+  entity <- entity[, c(entity_id, paste0("is--", entity_id), "name")]
+
+  #Error if an ID is duplicated
+  if (any(duplicated(entity[[entity_id]]))) {
+    stop("The Entity ID contains duplicates. Resolve before running the function again.")
+  }
 
   # create a filename for the CSV
   output_filename <- paste0("ddf--entities--geo--", entity_id, ".csv")
@@ -151,6 +291,16 @@ create_ddf <- function(dataset, variable_id, variable_name, entity_id, entity_na
 
 
   ################################Datapoints####################################
+
+  # check for duplicate Entity IDs per variable
+
+  duplicates <- dataset %>%
+    count(.[[entity_id]], .[[variable_id]]) %>%
+    filter(n > 1)
+
+  if (nrow(duplicates) > 0) {
+    stop("Duplicate Entity ID(s) are associated with the same variable(s). Resolve before running the function again.")
+  }
 
   if (grepl("-", datacolumns)) {
     # if datacolumns is a range ("6-20")
@@ -219,7 +369,6 @@ create_ddf <- function(dataset, variable_id, variable_name, entity_id, entity_na
     write.csv(long_format, file = output_filepath, row.names = FALSE, quote = FALSE, na = "", fileEncoding = "UTF-8")
 
   }
-
 
 
 }

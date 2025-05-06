@@ -24,6 +24,6 @@ This function creates a concepts-file in the DDF-format
 \examples{
 \dontrun{
 create_entities(dataset = dataset, entity_id = "reg_id", entity_name = "Region",
-output_folder = "C:/Users/current.user/Documents")
+output_folder = "path/to/folder")
 }
 }
