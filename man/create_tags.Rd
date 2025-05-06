@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_tags.R
 \name{create_tags}
 \alias{create_tags}
-\title{Create Concept-file}
+\title{Create Tag-file}
 \usage{
 create_tags(dataset, tag_id, tag_name, parent = NULL, output_folder = getwd())
 }
@@ -21,7 +21,7 @@ create_tags(dataset, tag_id, tag_name, parent = NULL, output_folder = getwd())
 Saves a CSV-file in the given output-folder named "ddf--entities--tag". This file includes one row for each named tag ID with name, and optionally parent tag.
 }
 \description{
-This function creates a concepts-file in the DDF-format
+This function creates a tag-file in the DDF-format
 }
 \examples{
 \dontrun{
