@@ -1,0 +1,26 @@
+{
+    "id": "88725491",
+    "path": "~/DDFConverter/R/create_DDF.R",
+    "project_path": "R/create_DDF.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1746426794353.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "336,48",
+        "scrollLine": "321"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1746533693,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1746533693669,
+    "read_only": false,
+    "read_only_alternatives": []
+}
