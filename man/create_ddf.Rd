@@ -22,7 +22,7 @@ create_ddf(
 )
 }
 \arguments{
-\item{dataset}{A data frame. The data set to be converted. Data has to be in long-format.}
+\item{dataset}{A data frame. The data set to be converted. Data has to be in wide-format.}
 
 \item{variable_id}{A character variable. The ID connected to each variable. Should only include lower case letters and underscores.}
 
