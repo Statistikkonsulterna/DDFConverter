@@ -1,7 +1,7 @@
-#' Create Concept-file
+#' Create Tag-file
 #'
-#' This function creates a concepts-file in the DDF-format
-#' @param dataset A data frame. The data set to be converted. Data has be in long-format.
+#' This function creates a tag-file in the DDF-format
+#' @param dataset A data frame. The data set to be converted. Data has to be in long-format.
 #' @param tag_id A character variable. The ID connected to each variable. Should only include lower case letters and underscores.
 #' @param tag_name A character variable. The Name of each variable.
 #' @param parent (Optional) A character variable. The definition of each variable. Should not include commas or semi-colons.

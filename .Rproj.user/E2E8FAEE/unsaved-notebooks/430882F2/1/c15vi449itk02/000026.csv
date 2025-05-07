@@ -1,0 +1,32 @@
+"0","plot1 <- df %>%
+  filter(Question == 1) %>% 
+  ggplot(aes(x = Gender, y = Value, fill = Likert)) +
+  geom_bar(stat = ""identity"", position = ""fill"") +
+  labs(title = ""Bar chart split by gender"",
+       x = ""Gender"",
+       y = ""Value"",
+       fill = ""Likert Scale"") +
+  theme_minimal() +
+  coord_flip() %>% 
+  filter(Question == 2) %>% 
+  ggplot(aes(x = Gender, y = Value, fill = Likert)) +
+  geom_bar(stat = ""identity"", position = ""fill"") +
+  labs(title = ""Bar chart split by gender"",
+       x = ""Gender"",
+       y = ""Value"",
+       fill = ""Likert Scale"") +
+  theme_minimal() +
+  coord_flip() %>% 
+  filter(Question == 3) %>% 
+  ggplot(aes(x = Gender, y = Value, fill = Likert)) +
+  geom_bar(stat = ""identity"", position = ""fill"") +
+  labs(title = ""Bar chart split by gender"",
+       x = ""Gender"",
+       y = ""Value"",
+       fill = ""Likert Scale"") +
+  theme_minimal() +
+  coord_flip()
+"
+"2","Error in UseMethod(""filter"") : 
+  no applicable method for 'filter' applied to an object of class ""c('CoordFlip', 'CoordCartesian', 'Coord', 'ggproto', 'gg')""
+"

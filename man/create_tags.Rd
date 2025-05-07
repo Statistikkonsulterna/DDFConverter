@@ -2,12 +2,12 @@
 % Please edit documentation in R/create_tags.R
 \name{create_tags}
 \alias{create_tags}
-\title{Create Concept-file}
+\title{Create Tag-file}
 \usage{
 create_tags(dataset, tag_id, tag_name, parent = NULL, output_folder = getwd())
 }
 \arguments{
-\item{dataset}{A data frame. The data set to be converted. Data has be in long-format.}
+\item{dataset}{A data frame. The data set to be converted. Data has to be in wide-format.}
 
 \item{tag_id}{A character variable. The ID connected to each variable. Should only include lower case letters and underscores.}
 
@@ -21,7 +21,7 @@ create_tags(dataset, tag_id, tag_name, parent = NULL, output_folder = getwd())
 Saves a CSV-file in the given output-folder named "ddf--entities--tag". This file includes one row for each named tag ID with name, and optionally parent tag.
 }
 \description{
-This function creates a concepts-file in the DDF-format
+This function creates a tag-file in the DDF-format
 }
 \examples{
 \dontrun{

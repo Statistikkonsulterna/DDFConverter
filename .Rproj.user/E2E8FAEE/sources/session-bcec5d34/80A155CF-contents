@@ -1,0 +1,48 @@
+
+library(ggplot2)
+library(dplyr)
+
+# Create test data
+
+df <- matrix(nrow = 100, ncol = 3)
+
+df <- as.data.frame(df)
+colnames(df) <- c("Value", "Gender", "Question")
+
+df[,1] <- runif(100, min = 1, max = 5)
+df[,1] <- round(df[,1])
+
+df[,2] <- runif(100, min = 1, max = 2)
+df[,2] <- round(df[,2])
+
+df[,3] <- runif(100, min = 1, max = 3)
+df[,3] <- round(df[,3])
+
+
+df <- df %>% 
+  mutate(Likert = case_when(
+    Value == 5 ~ "Strongly Agree",
+    Value == 4 ~ "Agree",
+    Value == 3 ~ "Neutral",
+    Value == 2 ~ "Disagree",
+    Value == 1 ~ "Strongly Disagree"),
+  Gender = case_when(
+    Gender == 2 ~ "Men",
+    Gender == 1 ~ "Women"))
+ 
+for (i in 1:max(df$Question)) {
+  
+               
+plot1 <- df %>% 
+  filter(Question == i) %>% 
+  ggplot(aes(x = Gender, y = Value, fill = Likert)) +
+  geom_bar(stat = "identity", position = "fill") +
+  labs(title = "Bar chart split by gender",
+       x = "Gender",
+       y = "Value",
+       fill = "Likert Scale") +
+  theme_minimal() +
+  coord_flip()
+print(plot1)
+}  
+
