@@ -46,3 +46,39 @@ plot1 <- df %>%
 print(plot1)
 }  
 
+
+
+# I am creating two vectors for each successful and failed description files
+successful_files <- c()
+error_vector <- c()
+
+# Specify the directory you have received from .libPaths()
+dir_path <- "C:/Users/amelia.bodin/Documents/DDFConverter"
+
+# Get the list of DESCRIPTION files in all subfolders
+desc_files <-
+  list.files(
+    path = dir_path,
+    pattern = "DESCRIPTION",
+    recursive = TRUE,
+    full.names = TRUE
+  )
+
+# Loop through the files
+for (file in desc_files) {
+  tryCatch({
+    # Attempting to read the file
+    desc <- read.dcf(file)
+    
+    # If successful, add to successful_files vector and show a console message
+    successful_files <- c(successful_files, file)
+    cli::cli_alert_success(paste0("Successfully loaded ", file))
+  }, error = function(e) {
+    # If an error occurs, add to error_vector and show a console message
+    error_vector <- c(error_vector, file)
+    cli::cli_alert_danger(paste0("Failed to loaded ", file))
+  })
+}
+
+# Print error vector or follow console for errors
+print(paste("Files with errors: ", error_vector))
