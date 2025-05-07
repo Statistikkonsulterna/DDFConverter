@@ -1,7 +1,7 @@
 #' Create datapoint-files
 #'
 #' This function creates one datapoint-file for each variable in the data set in the DDF-format
-#' @param dataset A data frame. The data set to be converted. Data has to be in long-format.
+#' @param dataset A data frame. The data set to be converted. Data has to be in wide-format.
 #' @param variable_id A character variable. The ID connected to each variable. Should only include lower case letters and underscores.
 #' @param entity_id A character variable. The ID connected to each entity. Should only include lower case letters and underscores.
 #' @param datacolumns A range of numeric variables. The columns including data. Should be referenced in the format "1-3" or "1,2,3"

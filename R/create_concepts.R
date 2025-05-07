@@ -1,7 +1,7 @@
 #' Create Concept-file
 #'
 #' This function creates a concepts-file in the DDF-format
-#' @param dataset A data frame. The data set to be converted. Data has to be in long-format.
+#' @param dataset A data frame. The data set to be converted. Data has to be in wide-format.
 #' @param variable_id A character variable. The ID connected to each variable. Should only include lower case letters and underscores.
 #' @param variable_name A character variable. The Name of each variable.
 #' @param entity_id A character variable. The ID connected to each entity. Should only include lower case letters and underscores.
