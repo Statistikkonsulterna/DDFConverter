@@ -45,9 +45,20 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><p>This R-package uses an existing dataset and easily transforms into a DDF-filesystem, which can be used in the Vizabi tool. Five functions are included; create_concepts creates only the concepts-file. create_entities creates only the entities-file. create_datapoints creates only datapoint-files. create_tags creates only the tag-file. create_ddf creates an entire filesystem containing concepts, entities, tags and datapoints.</p>
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header"><h1 id="ddf-converter">DDF Converter<a class="anchor" aria-label="anchor" href="#ddf-converter"></a>
+</h1></div>
+<p>This R-package uses an existing dataset and easily transforms into a DDF-filesystem, which can be used in the Vizabi tool. Five functions are included; create_concepts creates only the concepts-file. create_entities creates only the entities-file. create_datapoints creates only datapoint-files. create_tags creates only the tag-file. create_ddf creates an entire filesystem containing concepts, entities, tags and datapoints.</p>
 <p>NOTE: A datapackage-generator is not included. To validate your DDF-filesystem use the built-in validator in the Gapminder Offline-tool, or the terminal. More info on validating here: <a href="https://github.com/Gapminder/ddf-validation" class="external-link uri">https://github.com/Gapminder/ddf-validation</a>.</p>
-
+<div class="section level2">
+<h2 id="how-to-download">How to download<a class="anchor" aria-label="anchor" href="#how-to-download"></a>
+</h2>
+<p>Use the following block of code to download this package to be able to use it in your R Environment.</p>
+<pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
+<span><span class="fu">install.github</span><span class="op">(</span><span class="st">"Statistikkonsulterna/DDFConverter"</span><span class="op">)</span></span></code></pre>
+</div>
+</div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
