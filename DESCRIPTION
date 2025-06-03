@@ -2,7 +2,9 @@ Package: DDFConverter
 Type: Package
 Title: Convert a dataset into a DDF-filesystem
 Version: 0.1.0
-Author: Amelia Bodin
+Authors@R: c(
+    person("Amelia", "Bodin", email = "amelia.bodin@statistikkonsulterna.se", role = "cre"),
+    person("Statistikkonsulterna Väst AB", role = c("cph", "fnd")))
 Maintainer: Amelia Bodin <amelia.bodin@statistikkonsulterna.se>
 Description: This R-package uses an existing dataset and easily transforms into a DDF-filesystem, which can be used in the Vizabi tool.
     NOTE: A datapackage-generator is not included. To validate your DDF-filesystem use the built-in validator in the Gapminder Offline-tool, or the terminal.
@@ -16,4 +18,4 @@ Imports:
     tidyr,
     tibble,
     utils
-URL: https://statistikkonsulterna.github.io/DDFConverter/
+URL: https://statistikkonsulterna.github.io/DDFConverter/ https://github.com/Statistikkonsulterna/DDFConverter
